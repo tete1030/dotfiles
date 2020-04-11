@@ -1,5 +1,7 @@
 call plug#begin('~/.vim/plugged')
 
+Plug 'tpope/vim-sensible'
+
 Plug 'jlanzarotta/bufexplorer'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'preservim/nerdtree'
@@ -13,17 +15,15 @@ Plug 'airblade/vim-gitgutter'
 Plug 'Shougo/vimproc.vim'
 Plug 'kshenoy/vim-signature'
 Plug 'tmux-plugins/vim-tmux'
+Plug 'tmux-plugins/vim-tmux-focus-events'
 
 Plug '~/.vim/myplugin'
 
 call plug#end()
 
-set nofixendofline
-syntax on
-filetype plugin indent on
-set tabstop=4
-set shiftwidth=4
-set expandtab
+" =============== THEMES ================
+set t_Co=256
+
 " ******* Solarized ******
 " colorscheme solarized
 let g:solarized_termcolors=256
@@ -49,17 +49,10 @@ let g:solarized_termcolors=256
 " hi String ctermfg = yellow
 " hi MatchParen ctermbg=none cterm=underline ctermfg=magenta
 
-set t_Co=256
 let g:oceanic_next_terminal_bold = 1
 let g:oceanic_next_terminal_italic = 0
 colorscheme OceanicNext
 
-set mouse=a
-" sgr support more than 223 columns
-set ttymouse=sgr
-set clipboard=unnamedplus
-set guifont=Meslo\ LG\ S\ DZ\ Regular\ for\ Powerline:h14
-set number
 " let g:airline_theme='oceanicnext'
 let g:airline_theme='solarized'
 let g:airline_solarized_bg='dark'
@@ -69,75 +62,28 @@ let g:airline#extensions#tabline#tab_nr_type = 1
 let g:airline#extensions#tabline#fnamemod = ':p:~:.' " ':p:.'
 " buffer number
 let g:airline#extensions#tabline#buffer_nr_show = 1
-set backspace=indent,eol,start
-set laststatus=2
-set smarttab
-set nrformats-=octal
-" key timeout
-set ttimeout
-set ttimeoutlen=100
-set incsearch
-set hlsearch
-" Use <C-L> to clear the highlighting of :set hlsearch.
-if maparg('<C-L>', 'n') ==# ''
-  nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
-endif
-set ruler
-if !&scrolloff
-  set scrolloff=1
-endif
-if !&sidescrolloff
-  set sidescrolloff=5
-endif
-set display+=lastline
-if &encoding ==# 'latin1' && has('gui_running')
-  set encoding=utf-8
-endif
 
-if &listchars ==# 'eol:$'
-  set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
-endif
+" =============== CONFIGS ================
 
-if v:version > 703 || v:version == 703 && has("patch541")
-  set formatoptions+=j " Delete comment character when joining commented lines
-endif
+set nofixendofline
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set mouse=a
+" sgr support more than 223 columns
+set ttymouse=sgr
+" on mac and win, use unnamed; on linux use unnamedplus
+" https://stackoverflow.com/questions/30691466
+set clipboard^=unnamed,unnamedplus
+set guifont=Meslo\ LG\ S\ DZ\ Regular\ for\ Powerline:h14
+set number
 
-if has('path_extra')
-  setglobal tags-=./tags tags-=./tags; tags^=./tags;
-endif
-
-set autoread
-
-if &history < 1000
-  set history=1000
-endif
-if &tabpagemax < 50
-  set tabpagemax=50
-endif
-
-if !empty(&viminfo)
-  set viminfo^=!
-endif
-set sessionoptions-=options
-
-" Allow color schemes to do bright colors without forcing bold.
-if &t_Co == 8 && $TERM !~# '^linux\|^Eterm'
-  set t_Co=16
-endif
-
-" Load matchit.vim, but only if the user hasn't installed a newer version.
-if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
-  runtime! macros/matchit.vim
-endif
-
-inoremap <C-U> <C-G>u<C-U>
 
 " save and restore session
 " Quick write session with F2
 map <F2> :mksession! ~/vim_session<cr>
 " And load session with F3
 map <F3> :source ~/vim_session<cr>:silent exec "!rm ~/vim_session"<cr><C-L>
-
 
 " Switch tab
 nnoremap <silent> <LocalLeader>[ gT
