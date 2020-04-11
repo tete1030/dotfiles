@@ -124,6 +124,6 @@ zplug load
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-alias dgit='git --git-dir ~/.dotfiles/.git --work-tree=$HOME'
+alias dgit='git --git-dir="$HOME/.dotfiles/" --work-tree="$HOME"'
 
 [[ ! -f ~/.my.zsh ]] || source ~/.my.zsh
