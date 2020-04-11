@@ -138,9 +138,10 @@ map <F2> :mksession! ~/vim_session<cr>
 " And load session with F3
 map <F3> :source ~/vim_session<cr>:silent exec "!rm ~/vim_session"<cr><C-L>
 
+
 " Switch tab
-" nnoremap <silent> <LocalLeader>[ gT
-" nnoremap <silent> <LocalLeader>] gt
+nnoremap <silent> <LocalLeader>[ gT
+nnoremap <silent> <LocalLeader>] gt
 
 " View diff between current buffer and original file
 function! s:DiffWithSaved()
@@ -172,8 +173,9 @@ nnoremap <silent> <F12> :BufExplorer<CR>
 " \b \f \g : go back/forward/last-used
 " \1 \2 \3 : go to buffer 1/2/3 etc
 nnoremap <Leader>l :BufExplorer<CR>
-nnoremap <Leader>[ :bp<CR>
-nnoremap <Leader>] :bn<CR>
+" Used by switching tabs
+nnoremap <Leader>b :bp<CR>
+nnoremap <Leader>f :bn<CR>
 nnoremap <Leader>g :e#<CR>
 nnoremap <Leader>1 :1b<CR>
 nnoremap <Leader>2 :2b<CR>
@@ -199,3 +201,7 @@ nnoremap <space> za
 " YouCompleteMe
 let g:ycm_auto_trigger = 0
 let g:ycm_autoclose_preview_window_after_completion = 1
+
+" Allow saving of files as sudo when I forgot to start vim using sudo.
+cnoremap w!! execute 'write !sudo tee % >/dev/null' <bar> edit!
+
