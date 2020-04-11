@@ -126,4 +126,9 @@ zplug load
 
 alias dgit='git --git-dir="$HOME/.dotfiles/" --work-tree="$HOME"'
 
+# Force completion filenames by Ctrl-x Tab
+zle -C complete complete-word complete-files
+bindkey '^X\t' complete
+complete-files () { compadd - $PREFIX* }
+
 [[ ! -f ~/.my.zsh ]] || source ~/.my.zsh
