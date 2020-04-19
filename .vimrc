@@ -12,10 +12,13 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
-Plug 'Shougo/vimproc.vim'
 Plug 'kshenoy/vim-signature'
 Plug 'tmux-plugins/vim-tmux'
 Plug 'tmux-plugins/vim-tmux-focus-events'
+Plug 'easymotion/vim-easymotion'
+Plug 'haya14busa/incsearch.vim'
+Plug 'haya14busa/incsearch-easymotion.vim'
+Plug 'haya14busa/incsearch-fuzzy.vim'
 
 Plug '~/.vim/myplugin'
 
@@ -50,7 +53,9 @@ let g:solarized_termcolors=256
 " hi MatchParen ctermbg=none cterm=underline ctermfg=magenta
 
 let g:oceanic_next_terminal_bold = 1
-let g:oceanic_next_terminal_italic = 0
+if has("gui_running")
+    let g:oceanic_next_terminal_italic = 1
+endif
 colorscheme OceanicNext
 
 " let g:airline_theme='oceanicnext'
@@ -75,7 +80,7 @@ set ttymouse=sgr
 " on mac and win, use unnamed; on linux use unnamedplus
 " https://stackoverflow.com/questions/30691466
 set clipboard^=unnamed,unnamedplus
-set guifont=Meslo\ LG\ S\ DZ\ Regular\ for\ Powerline:h14
+set guifont=MesloLGS\ NF:h14
 set number
 
 
@@ -84,10 +89,6 @@ set number
 map <F2> :mksession! ~/vim_session<cr>
 " And load session with F3
 map <F3> :source ~/vim_session<cr>:silent exec "!rm ~/vim_session"<cr><C-L>
-
-" Switch tab
-nnoremap <silent> <LocalLeader>[ gT
-nnoremap <silent> <LocalLeader>] gt
 
 " View diff between current buffer and original file
 function! s:DiffWithSaved()
@@ -104,8 +105,13 @@ function! UpdateDisplay()
 endfunction
 com! UpdateDisp call UpdateDisplay()
 
-" menu
-set wildchar=<Tab> wildmenu wildmode=full
+" auto completion
+set wildchar=<Tab> wildmenu wildmode=longest:full,full
+
+" Switch tab
+nnoremap <silent> <LocalLeader>- gT
+nnoremap <silent> <LocalLeader>= gt
+
 " buffer switch
 set wildcharm=<C-Z>
 nnoremap <F10> :b <C-Z>
@@ -115,13 +121,12 @@ nnoremap <silent> <F12> :BufExplorer<CR>
 " nnoremap <silent> <S-F12> :bp<CR>
 " Mappings to access buffers (don't use "\p" because a
 " delay before pressing "p" would accidentally paste).
-" \l       : list buffers
-" \b \f \g : go back/forward/last-used
+" \b       : list buffers
+" \[ \] \g : go back/forward/last-used
 " \1 \2 \3 : go to buffer 1/2/3 etc
-nnoremap <Leader>l :BufExplorer<CR>
-" Used by switching tabs
-nnoremap <Leader>b :bp<CR>
-nnoremap <Leader>f :bn<CR>
+nnoremap <Leader>b :BufExplorer<CR>
+nnoremap <Leader>[ :bp<CR>
+nnoremap <Leader>] :bn<CR>
 nnoremap <Leader>g :e#<CR>
 nnoremap <Leader>1 :1b<CR>
 nnoremap <Leader>2 :2b<CR>
@@ -151,3 +156,60 @@ let g:ycm_autoclose_preview_window_after_completion = 1
 " Allow saving of files as sudo when I forgot to start vim using sudo.
 cnoremap w!! execute 'write !sudo tee % >/dev/null' <bar> edit!
 
+nmap <F6> :NERDTreeToggle<CR>
+
+" =========== EasyMotion ===========
+let g:EasyMotion_do_mapping = 0 " Disable default mappings
+
+" <Leader>f{char} to move to {char}
+map  <Leader>f <Plug>(easymotion-bd-f)
+nmap <Leader>f <Plug>(easymotion-overwin-f)
+
+" s{char}{char} to move to {char}{char}
+nmap s <Plug>(easymotion-overwin-f2)
+
+" Move to line
+map <Leader>L <Plug>(easymotion-bd-jk)
+nmap <Leader>L <Plug>(easymotion-overwin-line)
+
+" Move to word
+map  <Leader>w <Plug>(easymotion-bd-w)
+nmap <Leader>w <Plug>(easymotion-overwin-w)
+
+" Turn on case-insensitive feature
+let g:EasyMotion_smartcase = 1
+
+" JK motions: Line motions
+map <Leader>l <Plug>(easymotion-lineforward)
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
+map <Leader>h <Plug>(easymotion-linebackward)
+
+let g:EasyMotion_startofline = 0 " keep cursor column when JK motion
+
+" =========== haya14busa/incsearch.vim ===========
+function! s:config_easyfuzzymotion(...) abort
+  return extend(copy({
+  \   'converters': [incsearch#config#fuzzyword#converter()],
+  \   'modules': [incsearch#config#easymotion#module({'overwin': 1})],
+  \   'keymap': {"\<CR>": '<Over>(easymotion)'},
+  \   'is_expr': 0,
+  \   'is_stay': 1
+  \ }), get(a:, 1, {}))
+endfunction
+
+noremap <silent><expr> <Space>/ incsearch#go(<SID>config_easyfuzzymotion())
+
+map /  <Plug>(incsearch-forward)
+map ?  <Plug>(incsearch-backward)
+map g/ <Plug>(incsearch-stay)
+
+" :h g:incsearch#auto_nohlsearch
+set hlsearch
+let g:incsearch#auto_nohlsearch = 1
+map n  <Plug>(incsearch-nohl-n)
+map N  <Plug>(incsearch-nohl-N)
+map *  <Plug>(incsearch-nohl-*)
+map #  <Plug>(incsearch-nohl-#)
+map g* <Plug>(incsearch-nohl-g*)
+map g# <Plug>(incsearch-nohl-g#)
