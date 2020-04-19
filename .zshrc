@@ -49,7 +49,7 @@ ZSH_THEME=""
 # DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
+ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
 # COMPLETION_WAITING_DOTS="true"
@@ -75,7 +75,7 @@ ZSH_THEME=""
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git docker docker-compose github)
+plugins=(git docker docker-compose github node npm tmux rsync)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -130,5 +130,7 @@ alias dgit='git --git-dir="$HOME/.dotfiles/" --work-tree="$HOME"'
 zle -C complete complete-word complete-files
 bindkey '^X\t' complete
 complete-files () { compadd - $PREFIX* }
+
+export EDITOR=vim
 
 [[ ! -f ~/.my.zsh ]] || source ~/.my.zsh
