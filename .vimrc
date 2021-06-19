@@ -139,8 +139,16 @@ function! UpdateDisplay()
 endfunction
 com! UpdateDisp call UpdateDisplay()
 
-" auto completion
-set wildchar=<Tab> wildmenu wildmode=longest:full,full
+" menu
+set wildchar=<Tab>
+" Wildmenu
+if has("wildmenu")
+    set wildignore+=*.a,*.o
+    set wildignore+=.DS_Store,.git,.hg,.svn
+    set wildignore+=*~,*.swp,*.tmp
+    set wildmenu
+    set wildmode=longest:full,full
+endif
 
 " Switch tab
 nnoremap <silent> <LocalLeader>- gT
