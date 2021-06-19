@@ -24,6 +24,21 @@ Plug 'haya14busa/incsearch-fuzzy.vim'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'ekalinin/Dockerfile.vim'
 
+if has('nvim')
+  Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
+endif
+
+if has("patch-8.1.0360")
+    set diffopt+=internal,algorithm:patience
+else
+    Plug 'chrisbra/vim-diff-enhanced'
+    " started In Diff-Mode set diffexpr (plugin not loaded yet)
+    if &diff
+        let &diffexpr='EnhancedDiff#Diff("git diff", "--diff-algorithm=patience")'
+    endif
+endif
+Plug 'rickhowe/diffchar.vim'
+
 Plug '~/.vim/myplugin'
 
 call plug#end()
@@ -72,21 +87,36 @@ let g:airline#extensions#tabline#fnamemod = ':p:~:.' " ':p:.'
 " buffer number
 let g:airline#extensions#tabline#buffer_nr_show = 1
 
+if exists('g:started_by_firenvim')
+  let g:airline_powerline_fonts = 0
+  let g:airline_theme='bubblegum'
+endif
+
 " =============== CONFIGS ================
 
 set nofixendofline
 set tabstop=4
 set shiftwidth=4
 set expandtab
+autocmd FileType vim setlocal tabstop=2 shiftwidth=2 expandtab
+
 set mouse=a
-" sgr support more than 223 columns
-set ttymouse=sgr
+
+if !has('nvim')
+  " sgr support more than 223 columns
+  set ttymouse=sgr
+endif
 " on mac and win, use unnamed; on linux use unnamedplus
 " https://stackoverflow.com/questions/30691466
 set clipboard^=unnamed,unnamedplus
-set guifont=MesloLGS\ NF:h14
-set number
 
+set guifont=MesloLGS\ NF:h14
+if exists('g:started_by_firenvim')
+  set guifont=MesloLGS\ NF:h18
+  au BufEnter github.com_*.txt set filetype=markdown
+endif
+
+set number
 
 " save and restore session
 " Quick write session with F2
@@ -217,3 +247,7 @@ map *  <Plug>(incsearch-nohl-*)
 map #  <Plug>(incsearch-nohl-#)
 map g* <Plug>(incsearch-nohl-g*)
 map g# <Plug>(incsearch-nohl-g#)
+
+" diffchar.vim
+let g:DiffColors = 3
+

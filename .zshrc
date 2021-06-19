@@ -134,3 +134,4 @@ complete-files () { compadd - $PREFIX* }
 export EDITOR=vim
 
 [[ ! -f ~/.my.zsh ]] || source ~/.my.zsh
+
