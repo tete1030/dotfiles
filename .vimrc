@@ -114,6 +114,9 @@ set guifont=MesloLGS\ NF:h14
 if exists('g:started_by_firenvim')
   set guifont=MesloLGS\ NF:h18
   au BufEnter github.com_*.txt set filetype=markdown
+  let fc = g:firenvim_config['localSettings']
+  let fc['https?://weibo.com/'] = { 'takeover': 'never', 'priority': 1 }
+  let fc['https?://twitter.com/'] = { 'takeover': 'never', 'priority': 1 }
 endif
 
 set number
