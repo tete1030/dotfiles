@@ -133,6 +133,7 @@ zle -C complete complete-word complete-files
 bindkey '^X\t' complete
 complete-files () { compadd - $PREFIX* }
 
+export LC_ALL=en_US.UTF-8
 export EDITOR=vim
 
 [[ ! -f ~/.my.zsh ]] || source ~/.my.zsh
